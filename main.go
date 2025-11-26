@@ -893,8 +893,8 @@ func setupRoutes(r *gin.Engine) {
 	users := r.Group("/users")
 	users.Use(authMiddleware())
 	{
-		users.POST("/", requirePermission("create_user"), createUser)
 		users.GET("/", requirePermission("view_users"), getAllUsers)
+		users.POST("/", requirePermission("create_user"), createUser)
 		users.GET("/:id", requirePermission("view_users"), getUserByID)
 		users.PUT("/:id", requirePermission("update_user"), updateUser)
 		users.DELETE("/:id", requirePermission("delete_user"), deleteUser)
@@ -904,8 +904,8 @@ func setupRoutes(r *gin.Engine) {
 	blogs := r.Group("/blogs")
 	blogs.Use(authMiddleware())
 	{
-		blogs.POST("/", requirePermission("create_blog"), createBlog)
 		blogs.GET("/", requirePermission("read_blog"), getAllBlogs)
+		blogs.POST("/", requirePermission("create_blog"), createBlog)
 		blogs.GET("/:id", requirePermission("read_blog"), getBlogByID)
 		blogs.PUT("/:id", requirePermission("update_blog"), updateBlog)
 		blogs.DELETE("/:id", requirePermission("delete_blog"), deleteBlog)
@@ -915,8 +915,8 @@ func setupRoutes(r *gin.Engine) {
 	portfolios := r.Group("/portfolios")
 	portfolios.Use(authMiddleware())
 	{
-		portfolios.POST("/", requirePermission("create_portfolio"), createPortfolio)
 		portfolios.GET("/", requirePermission("read_portfolio"), getAllPortfolios)
+		portfolios.POST("/", requirePermission("create_portfolio"), createPortfolio)
 		portfolios.GET("/:id", requirePermission("read_portfolio"), getPortfolioByID)
 		portfolios.PUT("/:id", requirePermission("update_portfolio"), updatePortfolio)
 		portfolios.DELETE("/:id", requirePermission("delete_portfolio"), deletePortfolio)
@@ -926,8 +926,8 @@ func setupRoutes(r *gin.Engine) {
 	testimonials := r.Group("/testimonials")
 	testimonials.Use(authMiddleware())
 	{
-		testimonials.POST("/", requirePermission("create_testimonial"), createTestimonial)
 		testimonials.GET("/", requirePermission("read_testimonial"), getAllTestimonials)
+		testimonials.POST("/", requirePermission("create_testimonial"), createTestimonial)
 		testimonials.GET("/:id", requirePermission("read_testimonial"), getTestimonialByID)
 		testimonials.PUT("/:id", requirePermission("update_testimonial"), updateTestimonial)
 		testimonials.DELETE("/:id", requirePermission("delete_testimonial"), deleteTestimonial)
@@ -959,6 +959,18 @@ func main() {
 	// Setup Gin
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
+
+	// Disable automatic trailing slash redirect
+	r.RedirectTrailingSlash = false
+
+	// Strip trailing slashes middleware
+	r.Use(func(c *gin.Context) {
+		path := c.Request.URL.Path
+		if len(path) > 1 && path[len(path)-1] == '/' {
+			c.Request.URL.Path = path[:len(path)-1]
+		}
+		c.Next()
+	})
 
 	// CORS configuration
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
