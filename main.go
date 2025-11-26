@@ -371,7 +371,7 @@ func getAllUsers(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var users []User
+	users := []User{}
 	for rows.Next() {
 		var user User
 		var permissions []string
@@ -556,7 +556,7 @@ func getAllBlogs(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var blogs []BlogPost
+	blogs := []BlogPost{}
 	for rows.Next() {
 		var blog BlogPost
 		var tags []string
@@ -672,7 +672,7 @@ func getAllPortfolios(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var portfolios []Portfolio
+	portfolios := []Portfolio{}
 	for rows.Next() {
 		var portfolio Portfolio
 		err := rows.Scan(&portfolio.ID, &portfolio.Title, &portfolio.Description, &portfolio.Image, &portfolio.Link, &portfolio.CreatedAt)
@@ -784,7 +784,7 @@ func getAllTestimonials(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var testimonials []Testimonial
+	testimonials := []Testimonial{}
 	for rows.Next() {
 		var testimonial Testimonial
 		err := rows.Scan(&testimonial.ID, &testimonial.Star, &testimonial.Name, &testimonial.Image, &testimonial.Content, &testimonial.Designation, &testimonial.CreatedAt)
