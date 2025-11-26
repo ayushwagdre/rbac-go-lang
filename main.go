@@ -417,15 +417,9 @@ func updateUser(c *gin.Context) {
 		return
 	}
 
-	hashedPassword, err := hashPassword(userCreate.Password)
-	if err != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "❌ Failed to hash password"})
-		return
-	}
-
 	result, err := db.Exec(
-		"UPDATE users SET name = $1, email = $2, password = $3, permissions = $4 WHERE id = $5",
-		userCreate.Name, userCreate.Email, hashedPassword, pq.Array(userCreate.Permissions), userID,
+		"UPDATE users SET name = $1, email = $2, permissions = $4 WHERE id = $5",
+		userCreate.Name, userCreate.Email, pq.Array(userCreate.Permissions), userID,
 	)
 
 	if err != nil {
