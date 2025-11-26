@@ -45,6 +45,12 @@ type UserCreate struct {
 	Permissions []string `json:"permissions"`
 }
 
+type UpdateUser struct {
+	Name        string   `json:"name" binding:"required"`
+	Email       string   `json:"email" binding:"required,email"`
+	Permissions []string `json:"permissions"`
+}
+
 type UserLogin struct {
 	Email    string `json:"email" binding:"required,email"`
 	Password string `json:"password" binding:"required"`
@@ -411,7 +417,7 @@ func getUserByID(c *gin.Context) {
 
 func updateUser(c *gin.Context) {
 	userID := c.Param("id")
-	var userCreate UserCreate
+	var userCreate UpdateUser
 	if err := c.ShouldBindJSON(&userCreate); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
