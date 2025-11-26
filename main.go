@@ -960,13 +960,14 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	// Enable automatic trailing slash redirect (default behavior)
-	r.RedirectTrailingSlash = true
+	// Disable automatic trailing slash redirect to prevent 301 redirects
+	r.RedirectTrailingSlash = false
 
 	// CORS configuration
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
 	if allowedOrigins == "" {
-		allowedOrigins = "*"
+		// Default allowed origins for development and production
+		allowedOrigins = "https://admin-dashboard-js-nine.vercel.app,http://localhost:5173,http://localhost:3000"
 	}
 
 	r.Use(cors.New(cors.Config{
