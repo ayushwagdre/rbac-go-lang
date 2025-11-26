@@ -960,17 +960,8 @@ func main() {
 	gin.SetMode(gin.ReleaseMode)
 	r := gin.Default()
 
-	// Disable automatic trailing slash redirect
-	r.RedirectTrailingSlash = false
-
-	// Strip trailing slashes middleware
-	r.Use(func(c *gin.Context) {
-		path := c.Request.URL.Path
-		if len(path) > 1 && path[len(path)-1] == '/' {
-			c.Request.URL.Path = path[:len(path)-1]
-		}
-		c.Next()
-	})
+	// Enable automatic trailing slash redirect (default behavior)
+	r.RedirectTrailingSlash = true
 
 	// CORS configuration
 	allowedOrigins := os.Getenv("ALLOWED_ORIGINS")
